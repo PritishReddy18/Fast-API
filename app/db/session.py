@@ -5,13 +5,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DB_URL = os.getenv("DATABASE_URL")
+DB_URL = os.getenv("DATA_BASE")
+
+if not DB_URL:
+    raise RuntimeError("DATA_BASE not available")
 
 if DB_URL.startswith("postgresql://"):
     DB_URL = DB_URL.replace("postgresql://", "postgresql+psycopg://", 1)
-
-if not DB_URL:
-    raise RuntimeError('DB_URL not available')
 
 engine = create_engine(
     DB_URL,
@@ -19,7 +19,6 @@ engine = create_engine(
 )
 
 Session = sessionmaker(
-    autocommit=False,
     autoflush=False,
     bind=engine
 )
