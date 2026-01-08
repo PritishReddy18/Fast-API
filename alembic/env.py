@@ -40,7 +40,7 @@ try:
     target_metadata = Base.metadata
 
     # 🔥 IMPORTANT: Read DATABASE_URL from env
-    DATABASE_URL = os.getenv("DATABASE_URL")
+    DATABASE_URL = os.getenv("DATA_BASE")
 
     if not DATABASE_URL:
         raise RuntimeError("DATABASE_URL is not set for Alembic")
