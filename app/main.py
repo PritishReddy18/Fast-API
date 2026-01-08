@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 
     # side way imports to load tables via Base
@@ -15,8 +14,6 @@ from app.api_routers.post_routers import router as post_router
     # side way imports to load routers
 from app.api_routers.user_routers import login
 from app.api_routers.profile_routers import view_profile_by_token
-
-load_dotenv()
 
 app = FastAPI()
 
