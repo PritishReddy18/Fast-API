@@ -59,6 +59,9 @@ try:
     if not database_url:
         raise RuntimeError("DATA_BASE / DATABASE_URL not set")
 
+    if database_url.startswith("postgresql://"):
+        database_url = database_url.replace("postgresql://", "postgresql+psycopg://", 1)
+
     config.set_main_option("sqlalchemy.url", database_url)
 
     # other values from the config, defined by the needs of env.py,
