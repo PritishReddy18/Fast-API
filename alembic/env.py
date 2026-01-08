@@ -27,6 +27,10 @@ try:
 
     # this is the Alembic Config object
     config = context.config
+    database_url = os.getenv("DATA_BASE") or os.getenv("DATABASE_URL")
+    if not database_url:
+        raise RuntimeError("DATABASE_URL is not set for Alembic")
+    config.set_main_option("sqlalchemy.url", database_url)
 
     # Interpret the config file for Python logging.
     if config.config_file_name is not None:
