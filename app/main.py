@@ -1,3 +1,4 @@
+from app.db.migrate import run_migrations
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -16,6 +17,12 @@ from app.api_routers.user_routers import login
 from app.api_routers.profile_routers import view_profile_by_token
 
 app = FastAPI()
+
+from app.db.migrate import run_migrations
+
+@app.on_event("startup")
+def startup():
+    run_migrations()
 
 origins = ["*"]
 
