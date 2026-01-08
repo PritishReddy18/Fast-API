@@ -2,18 +2,22 @@ import sys
 import os
 import traceback
 
-print("=== ALEMBIC ENV START ===")
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-print("BASE_DIR:", BASE_DIR)
-
-if BASE_DIR not in sys.path:
-    sys.path.append(BASE_DIR)
-    print("Added BASE_DIR to sys.path")
-
-print("sys.path:", sys.path)
-
 try:
+    print("=== ALEMBIC ENV START ===")
+
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    print("BASE_DIR:", BASE_DIR)
+
+    if BASE_DIR not in sys.path:
+        sys.path.append(BASE_DIR)
+        print("Added BASE_DIR to sys.path")
+
+    print("sys.path:", sys.path)
+
+    from dotenv import load_dotenv
+
+    load_dotenv()
+
     from logging.config import fileConfig
 
     from sqlalchemy import engine_from_config, pool
@@ -27,7 +31,7 @@ try:
 
     # this is the Alembic Config object
     config = context.config
-    database_url = os.getenv("DATA_BASE") or os.getenv("DATABASE_URL")
+    database_url = os.getenv("DATA_BASE")
     if not database_url:
         raise RuntimeError("DATABASE_URL is not set for Alembic")
     config.set_main_option("sqlalchemy.url", database_url)
