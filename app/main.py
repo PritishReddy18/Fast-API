@@ -35,3 +35,9 @@ app.add_middleware(
 app.include_router(user_router)
 app.include_router(profile_router)
 app.include_router(post_router)
+
+@app.get("/")
+def root():
+    return {
+        "message" : "HELLO, Welcome to the world of API!!"
+    }
