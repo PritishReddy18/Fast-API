@@ -1,5 +1,4 @@
 from pathlib import Path
-from sqlalchemy.orm import sessionmaker
 import os
 
 os.environ["ENV"] = "test"
@@ -17,25 +16,11 @@ from app.main import app
 from app.db.session import engine
 from app.db.base import Base
 
-# @pytest.fixture(autouse=True)
-# def clean_tables():
-#     Base.metadata.drop_all(bind=engine)
-#     Base.metadata.create_all(bind=engine)
-#     yield
-
-TestingSessionLocal = sessionmaker(bind=engine)
-
 @pytest.fixture(autouse=True)
-def db_session():
-    connection = engine.connect()
-    transaction = connection.begin()
-
-    session = TestingSessionLocal(bind=connection)
-    yield session
-
-    session.close()
-    transaction.rollback()
-    connection.close()
+def clean_tables():
+    Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
+    yield
 
 @pytest.fixture
 def client():
