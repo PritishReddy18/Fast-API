@@ -48,3 +48,23 @@ jobs:
             ${{ secrets.DOCKER_HUB_USERNAME }}/fastapi-app:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+  CEO:
+    needs: build-test-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to VPS with docker-compose
+        run: |
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+            cd /app/src
+            docker-compose pull
+            docker-compose up -d
+            docker image prune -f
+          EOF
