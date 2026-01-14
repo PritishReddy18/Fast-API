@@ -2,7 +2,12 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-DB_URL = os.getenv("DATA_BASE")
+ENV = os.getenv("ENV", "dev")
+
+if ENV == "test":
+    DB_URL = "sqlite:///./test.db"
+else:
+    DB_URL = os.getenv("DATA_BASE")
 
 if not DB_URL:
     raise RuntimeError("DATA_BASE not available")
@@ -12,7 +17,8 @@ if DB_URL.startswith("postgresql://"):
 
 engine = create_engine(
     DB_URL,
-    pool_pre_ping=True
+    pool_pre_ping=True,
+    connect_args={"check_same_thread": False} if DB_URL.startswith("sqlite") else {}
 )
 
 Session = sessionmaker(
