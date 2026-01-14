@@ -63,7 +63,10 @@ jobs:
       - name: Deploy to VPS with docker-compose
         run: |
           ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+            set -e
             cd /app/src
+            ls -la
+          
             docker-compose pull
             docker-compose up -d
             docker image prune -f
