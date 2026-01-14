@@ -2,3 +2,5 @@
 env/
 venv/
 __pycache__
+/tests/test_private.pem
+/tests/test_public.pem

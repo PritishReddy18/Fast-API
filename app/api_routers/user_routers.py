@@ -1,3 +1,4 @@
+from fastapi import HTTPException,status
 from sqlalchemy.orm import Session
 from app.schemas.validation_schemas.user_schemas import UserCreate
 from app.schemas.response_schemas.user_out import UserOut
@@ -12,11 +13,11 @@ router = APIRouter(
     tags=["Users"]
 )
 
-@router.post("/signup",response_model=UserOut)
+@router.post("/signup",response_model=UserOut,status_code=status.HTTP_200_OK)
 def sign_up(user: UserCreate , db:Session = Depends(get_db)):
     return create_user(db,user)
 
-@router.post("/login")
+@router.post("/login",status_code=status.HTTP_200_OK)
 def login(user : OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     token = login_user(user,db)
     return {

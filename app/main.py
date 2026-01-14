@@ -9,7 +9,7 @@ from app.orm_models.post_likes import PostLikes
 
     # side way imports to load routers
 from app.api_routers.user_routers import router as user_router
-from app.api_routers.profile_routers import routers as profile_router
+from app.api_routers.profile_routers import router as profile_router
 from app.api_routers.post_routers import router as post_router
 
     # side way imports to load routers
@@ -18,9 +18,12 @@ from app.api_routers.profile_routers import view_profile_by_token
 
 app = FastAPI()
 
+import os
+
 @app.on_event("startup")
 def startup():
-    run_migrations()
+    if os.getenv("ENV") != "test":
+        run_migrations()
 
 origins = ["*"]
 

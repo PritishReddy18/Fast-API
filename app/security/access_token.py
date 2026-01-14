@@ -13,6 +13,9 @@ def create_user_token(user_id):
     return token
 
 def get_current_user(token : str = Depends(oauth2_scheme)):
+    if not token:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Not authenticated buffalo")
+
     try:
         payload = jwt.decode(
             token,

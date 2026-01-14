@@ -13,30 +13,29 @@ from app.orm_models.post_likes import PostLikes
 from app.orm_models.posts_orm_model import CreatePost
 from sqlalchemy import func
 
-routers = APIRouter(
-    prefix="/user/profile",
+router = APIRouter(
+    prefix="/profile",
     tags = ["Users"]
 )
 
-@routers.post("/create",response_model=ProfileOut)
+@router.post("/create",response_model=ProfileOut,status_code=status.HTTP_200_OK)
 def show_profile(profile: UserProfile,user_id: int = Depends(get_current_user),db: Session = Depends(get_db)):
     user_exists = db.query(CreateProfile).filter(CreateProfile.user_id == user_id).first()
     if user_exists is None:
         return create_profile_by_id(profile, user_id, db)
     raise HTTPException(status_code=status.HTTP_409_CONFLICT,detail="user already exists")
 
+@router.get("/view",response_model=ProfileOut,status_code=status.HTTP_200_OK)
+def view_profile_by_token(user_id: int = Depends(get_current_user),db:Session = Depends(get_db)):
+    profile = db.query(CreateProfile).filter(CreateProfile.user_id == user_id).first()
+    if not profile:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="user's profile doesn't exist!!")
+    return profile
 
-@routers.get("/view/{name}",response_model=ProfileView)
+@router.get("/view/{name}",response_model=ProfileView,status_code=status.HTTP_200_OK)
 def view_profile(name,db:Session =Depends(get_db)):
     user = db.query(User).filter(User.username == name).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="user doesn't exists")
     profile = view_profile_by_id(name, db)
-    return profile
-
-@routers.get("/view",response_model=ProfileOut)
-def view_profile_by_token(user_id: int = Depends(get_current_user),db:Session = Depends(get_db)):
-    profile = db.query(CreateProfile).filter(CreateProfile.user_id == user_id).first()
-    if not profile:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="user's profile doesn't exist!!")
     return profile

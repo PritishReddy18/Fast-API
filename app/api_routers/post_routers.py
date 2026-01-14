@@ -9,19 +9,19 @@ from app.schemas.posts_schemas.user_post_likes import UserPostLikes
 from app.services.posts_services.post_user_like import like_system
 
 router = APIRouter(
-    prefix="/user",
+    prefix="/posts",
     tags=["Posts"]
 )
 
-@router.post("/create/post",response_model=CreatedPostOut)
+@router.post("/create",response_model=CreatedPostOut,status_code=status.HTTP_200_OK)
 def create_post(posts:CreatePosts,user_id : int = Depends(get_current_user),db:Session = Depends(get_db)):
     return create_user_post(posts,user_id,db)
 
 
-@router.get("/posts")
+@router.get("/view",status_code=status.HTTP_200_OK)
 def show_user_post(user_id : int = Depends(get_current_user), db : Session = Depends(get_db)):
     return show_posts(user_id,db)
 
-@router.post("/post/like")
+@router.post("/like")
 def like_post(likes : UserPostLikes, user_id : int = Depends(get_current_user), db:Session = Depends(get_db)):
     return like_system(user_id,likes,db)
