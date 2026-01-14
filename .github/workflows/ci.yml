@@ -49,8 +49,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
   CEO:
-    needs: build-test-push
     runs-on: ubuntu-latest
+    needs: Executive
 
     steps:
       - name: Setup SSH
